@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Green Api</title>
+</head>
+<body>
+    <style>
+       #Main {
+        display: flex;
+        margin: 100px;
+       } 
+
+       #SecondColumn {
+        display: flex;
+        flex-direction: column;
+        margin-left: 30px;
+       }
+
+        #FirstCloumn {
+            display: flex;
+            flex-direction: column;
+       }
+
+       .TextField {
+        margin: 10px;
+        width: 300px;
+        font-size: 24px;
+       }
+
+       .Button {
+        margin: 10px;
+        width: 200px;
+        font-size: 24px;
+       }
+
+       #AnswerTextArea {
+        margin: 10px;
+        width: 600px;
+        height: 600px;
+        font-size: 24px;
+       }
+       
+       #AnswerLabel {
+        margin: 10px;
+        font-size: 24px;
+        width: 300px;
+       }
+
+       #Message {
+        height: 100px;
+       }
+
+    </style>
+    <div id="Main">
+        <div id = "FirstColumn">
+            <div>
+                <input type="text" id="idInstance" placeholder="idInstance" class="TextField">
+            </div>
+
+            <div>
+                <input type="text" id="ApiTokenInstance" placeholder="ApiTokenInstance" class="TextField">
+            </div>
+
+            <div>
+                <button onclick="getSettings()" class="Button"  >getSettings</button>
+            </div>
+            <div>
+                <button onclick="getStateInstance()" class="Button"  >getSettings</button>      
+            </div>
+            
+            <div>
+                <input type="text" id="Number1" placeholder="Номер" class="TextField">
+            </div>
+
+            <div>
+                <textarea type="text" id="Message" placeholder="Сообщения" class="TextField"></textarea>
+            </div>
+
+            <div>
+                <button onclick="sendMessage()" class="Button"  >sendMessage</button>      
+            </div>
+
+            <div>
+                <input type="text" id="Number2" placeholder="Номер" class="TextField">
+            </div>
+
+            <div>
+                <input type="text" id="Url" placeholder="Url" class="TextField">
+            </div>
+
+            <div>
+                <button onclick="sendFileByUrl()" class="Button"  >sendFileByUrl</button>      
+            </div>
+
+        </div> 
+
+
+        <div id = "SecondColumn">
+            <label id="AnswerLabel">Ответ:</label>
+            <textarea  type="text"  id="AnswerTextArea" readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+
+        async function getSettings() {
+            let idInstance = document.getElementById("idInstance").value;
+            let apiTokenInstance = document.getElementById("ApiTokenInstance").value;
+
+            let fullUrl = "https://api.green-api.com/waInstance" + idInstance + "/getSettings/" + apiTokenInstance
+            try {
+
+                
+                const response = await fetch(fullUrl);
+                const data = await response.json();
+                
+                document.getElementById('AnswerTextArea').value = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('Ошибка:', error);
+                document.getElementById('AnswerTextArea').value = 'Ошибка: ' + error.message;
+            } 
+        }
+
+
+        async function getStateInstance() {
+            let idInstance = document.getElementById("idInstance").value;
+            let apiTokenInstance = document.getElementById("ApiTokenInstance").value;
+
+            let fullUrl = "https://api.green-api.com/waInstance" + idInstance + "/getStateInstance/" + apiTokenInstance
+            try {
+                
+                const response = await fetch(fullUrl);
+                const data = await response.json();
+                
+                document.getElementById('AnswerTextArea').value = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('Ошибка:', error);
+                document.getElementById('AnswerTextArea').value = 'Ошибка: ' + error.message;
+            } 
+        }
+
+
+        async function sendMessage() {
+            let idInstance = document.getElementById("idInstance").value;
+            let apiTokenInstance = document.getElementById("ApiTokenInstance").value;
+
+            let bodyToSendMessage = {
+                "chatId": document.getElementById("Number1").value + "@c.us", 
+                "message": document.getElementById("Message").value
+            }
+
+            let fullUrl = "https://api.green-api.com/waInstance" + idInstance + "/sendMessage/" + apiTokenInstance
+
+            try {
+                
+                const response = await fetch(fullUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body:  JSON.stringify(bodyToSendMessage),
+                });
+                const data = await response.json();
+                
+                document.getElementById('AnswerTextArea').value = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('Ошибка:', error);
+                document.getElementById('AnswerTextArea').value = 'Ошибка: ' + error.message;
+            } 
+        }
+
+        async function sendFileByUrl() {
+                        let idInstance = document.getElementById("idInstance").value;
+            let apiTokenInstance = document.getElementById("ApiTokenInstance").value;
+
+            let bodyToSendMessage = {
+                "chatId": document.getElementById("Number2").value + "@c.us", 
+                "urlFile": document.getElementById("Url").value,
+                "fileName": "file",
+                "caption": "file"
+            }
+
+            
+
+            let fullUrl = "https://api.green-api.com/waInstance" + idInstance + "/sendFileByUrl/" + apiTokenInstance
+
+            try {
+                
+                const response = await fetch(fullUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body:  JSON.stringify(bodyToSendMessage),
+                });
+                const data = await response.json();
+                
+                document.getElementById('AnswerTextArea').value = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('Ошибка:', error);
+                document.getElementById('AnswerTextArea').value = 'Ошибка: ' + error.message;
+            } 
+        }
+
+
+    </script>
+</body>
+</html>
